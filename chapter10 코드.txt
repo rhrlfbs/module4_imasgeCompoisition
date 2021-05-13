@@ -1,0 +1,307 @@
+#프레임 뺼셈 doc
+void CImageProcessingDoc::OnFrameSub()
+{
+   CFile File;
+   CFileDialog OpenDlg(TRUE);
+   
+   int i;
+   unsigned char *temp;
+
+   m_Re_height = m_height;
+   m_Re_width = m_width;
+   m_Re_size = m_Re_height * m_Re_width;
+
+   m_OutputImage = new unsigned char[m_Re_size];
+
+   if(OpenDlg.DoModal() == IDOK){
+      File.Open(OpenDlg.GetFileName(), CFile::modeRead);
+if(File.GetLength() == (unsigned)m_width * m_height){
+         temp = new unsigned char[m_size];
+
+         File.Read(temp, m_size);
+         File.Close();
+
+         // 프레임 간에 픽셀 대 픽셀로 뺄셈연산 실행
+         for(i=0 ; i<m_size ; i++){
+            if(m_InputImage[i] - temp[i] < 0)
+               m_OutputImage[i] = 0;
+            else
+               m_OutputImage[i] = m_InputImage[i] - temp[i];
+         }
+      }
+      else{
+         AfxMessageBox("Image size not matched");
+         return;
+      }
+   }
+}
+
+#프레임뺄셈 view
+void CImageProcessingView::OnFrameSub()
+{
+   CImageProcessingDoc* pDoc = GetDocument();
+   ASSERT_VALID(pDoc);
+
+   pDoc->OnFrameSub();
+
+   Invalidate(TRUE);
+}
+
+------------------------------------------------------------------------
+#곱셈
+void CImageProcessingDoc::OnFrameMul()
+{
+   CFile File;
+   CFileDialog OpenDlg(TRUE);
+
+   int i;
+   unsigned char *temp;
+   
+   m_Re_height = m_height;
+   m_Re_width = m_width;
+   m_Re_size = m_Re_height * m_Re_width;
+   
+   m_OutputImage = new unsigned char[m_Re_size];
+
+  if(OpenDlg.DoModal() == IDOK){
+      File.Open(OpenDlg.GetFileName(), CFile::modeRead);
+      if(File.GetLength() == (unsigned)m_width * m_height){
+         temp = new unsigned char[m_size];
+         File.Read(temp, m_size);
+         File.Close();
+      
+         // 프레임 간에 픽셀 대 픽셀로 곱셈연산 실행
+         for(i=0 ; i<m_size ; i++){
+            if(m_InputImage[i] * temp[i] > 255)
+               m_OutputImage[i] = 255;
+            else
+               m_OutputImage[i] = m_InputImage[i] *temp[i];
+         }
+      }
+      else{
+         AfxMessageBox("Image size not matched");
+         return;
+      }
+   }
+}
+
+#곱셈 view
+void CImageProcessingView::OnFrameMul()
+{
+   CImageProcessingDoc* pDoc = GetDocument();
+   ASSERT_VALID(pDoc);
+
+   pDoc->OnFrameMul();
+
+   Invalidate(TRUE);
+}
+
+------------------------------------------------------------------------------------
+#나눗셈
+void CImageProcessingDoc::OnFrameDiv()
+{
+   CFile File;
+   CFileDialog OpenDlg(TRUE);
+
+   int i;
+   unsigned char *temp;
+
+   m_Re_height = m_height;
+   m_Re_width = m_width;
+   m_Re_size = m_Re_height * m_Re_width;
+
+   m_OutputImage = new unsigned char[m_Re_size];
+
+   if(OpenDlg.DoModal() == IDOK){
+      File.Open(OpenDlg.GetFileName(), CFile::modeRead);
+
+      if(File.GetLength() == (unsigned)m_width * m_height){
+      temp = new unsigned char[m_size];
+
+      File.Read(temp, m_size);
+      File.Close();
+// 프레임 간에 픽셀 대 픽셀로 덧셈연산 실행
+      for(i=0 ; i<m_size ; i++){
+         if(m_InputImage[i] == 0)
+         // 나뉘는 값이‘0’이면 출력은 영상에서의 최소값
+            m_OutputImage[i] = 0;
+         else if(temp[i] == 0)
+         // 나누는 값이‘0’이면 출력은 영상에서의 최대값
+            m_OutputImage[i] = 255;
+         else
+            m_OutputImage[i] 
+               = (unsigned char)(m_InputImage[i] / temp[i]);
+         }
+      }
+      else{
+         AfxMessageBox("Image size not matched");
+         return;
+      }
+   }
+}
+
+#나눗셈 view
+void CImageProcessingView::OnFrameDiv()
+{
+   CImageProcessingDoc* pDoc = GetDocument();
+   ASSERT_VALID(pDoc);
+
+   pDoc->OnFrameDiv();
+
+   Invalidate(TRUE);
+}
+---------------------------------------------------------
+#and
+void CImageProcessingDoc::OnFrameAnd()
+{
+   CFile File;
+   CFileDialog OpenDlg(TRUE);
+   int i;
+   unsigned char *temp;
+
+   m_Re_height = m_height;
+   m_Re_width = m_width;
+   m_Re_size = m_Re_height * m_Re_width;
+
+   m_OutputImage = new unsigned char[m_Re_size];
+
+   if(OpenDlg.DoModal() == IDOK){
+      File.Open(OpenDlg.GetFileName(), CFile::modeRead);
+if(File.GetLength() == (unsigned)m_width * m_height){
+         temp = new unsigned char[m_size];
+         File.Read(temp, m_size);
+         File.Close();
+
+         // 프레임 간에 픽셀 대 픽셀로 AND 연산 실행
+         for(i=0 ; i<m_size ; i++){
+            m_OutputImage[i]
+               = (unsigned char)(m_InputImage[i] & temp[i]);
+         }
+      }
+      else{
+         AfxMessageBox("Image size not matched");
+         return;
+      }
+   }
+}
+
+
+#and view
+void CImageProcessingView::OnFrameAnd()
+{
+   CImageProcessingDoc* pDoc = GetDocument();
+   ASSERT_VALID(pDoc);
+
+   pDoc->OnFrameAnd();
+
+   Invalidate(TRUE);
+}
+---------------------------------------------------------
+#or
+void CImageProcessingDoc::OnFrameOr()
+{
+   CFile File;
+   CFileDialog OpenDlg(TRUE);
+   int i;
+   unsigned char *temp;
+
+   m_Re_height = m_height;
+   m_Re_width = m_width;
+   m_Re_size = m_Re_height * m_Re_width;
+
+   m_OutputImage = new unsigned char[m_Re_size];
+
+   if(OpenDlg.DoModal() == IDOK){
+      File.Open(OpenDlg.GetFileName(), CFile::modeRead);
+if(File.GetLength() == (unsigned)m_width * m_height){
+         temp = new unsigned char[m_size];
+
+         File.Read(temp, m_size);
+         File.Close();
+
+         // 프레임 간에 픽셀 대 픽셀로 OR 연산 실행
+         for(i=0 ; i<m_size ; i++){
+            m_OutputImage[i]
+               = (unsigned char)(m_InputImage[i] | temp[i]);
+         }
+      }
+      else{
+         AfxMessageBox("Image size not matched");
+         return;
+      }
+   }
+}
+
+#or view
+void CImageProcessingView::OnFrameOr()
+{
+   CImageProcessingDoc* pDoc = GetDocument();
+   ASSERT_VALID(pDoc);
+
+   pDoc->OnFrameOr();
+
+   Invalidate(TRUE);
+}
+
+---------------------------------------------------------
+#합성
+void CImageProcessingDoc::OnFrameComb()
+{
+   CFile File;
+   CFileDialog OpenDlg(TRUE);
+   int i;
+   unsigned char *temp, *masktemp, maskvalue;
+
+   m_Re_height = m_height;
+   m_Re_width = m_width;
+   m_Re_size = m_Re_height * m_Re_width;
+
+   m_OutputImage = new unsigned char[m_Re_size];
+
+   AfxMessageBox("합성할 영상을 입력하시오");
+
+   if(OpenDlg.DoModal() == IDOK){ // 합성할 영상을 입력
+      File.Open(OpenDlg.GetFileName(), CFile::modeRead);
+      temp = new unsigned char[m_size];
+      File.Read(temp, m_size);
+
+      if((unsigned)m_width * m_height != File.GetLength()){
+         AfxMessageBox("Image size not matched");
+         // 영상의 크기가 같을 때
+         return;
+      }
+      File.Close();
+   }
+   // 입력 영상, 합성할 영상, 마스크 영상의 크기가 같아야 한다.
+   AfxMessageBox("입력 영상의 마스크 영상을 입력하시오");
+   if(OpenDlg.DoModal() == IDOK){ // 입력 영상의 마스크 영상
+      File.Open(OpenDlg.GetFileName(), CFile::modeRead);
+      masktemp = new unsigned char[m_size];
+      File.Read(masktemp, m_size);
+      File.Close();
+   }
+
+   for(i=0 ; i<m_size ; i++){
+      maskvalue = 255 - masktemp[i];
+      // 영상의 최대값에서 마스크 영상의 값을 뺀다.
+      m_OutputImage[i]
+         = (m_InputImage[i] & masktemp[i]) | (temp[i] & maskvalue);
+      // 입력 영상과 마스크 영상은 AND 연산을 하고, 합성할 영상은
+      // (255-마스크 영상) 값과 AND 연산을 실행한 후 두 값을 더한다.
+   }
+}
+
+
+합성 view
+void CImageProcessingView::OnFrameComb()
+{
+   CImageProcessingDoc* pDoc = GetDocument();
+   ASSERT_VALID(pDoc);
+
+   pDoc->OnFrameComb();
+
+   Invalidate(TRUE);
+}
+
+
+
